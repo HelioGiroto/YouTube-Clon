@@ -1,0 +1,10 @@
+contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.sectionListRenderer.contents[0].itemSectionRenderer.contents[0].gridRenderer.items[0].gridVideoRenderer
+
+
+contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.sectionListRenderer.contents[0].itemSectionRenderer.contents[0].gridRenderer.items
+
+
+// Ext. vscode:
+https://marketplace.visualstudio.com/items?itemName=nidu.copy-json-path
+
+

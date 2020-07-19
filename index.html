@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;600&display=swap" rel="stylesheet">
+    <script src="yt.js"></script>
+</head>
+<style>
+    body {
+        margin: 0 auto;
+        padding: 0;
+        background-color: brown;
+        font-family: 'Quicksand', sans-serif;
+    }
+
+    #cabeca{
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-evenly;
+    }
+
+    #logo{
+        width: 100px;
+        margin-left: 20px;
+    }
+
+    h1{
+        margin-left: 50px;
+        font-weight: bold;
+        color: white;
+        margin-top: 30px;
+    }
+
+    h2{
+        color: white;
+        font-weight: 300;
+        margin-top: 34px;
+    }
+
+    #logoCanal > img {
+        margin-top: 3px;
+    }
+
+    #ultimo {
+        width: 100%;
+        text-align: center;
+        background-color: white;
+        display: flex;
+        flex-flow: row nowrap;
+    }
+
+    #imgU {
+        width: 100%;
+    }
+
+    #descricaoUltimo {
+        display: flex;
+        flex-flow: column;
+        text-align: left;
+        justify-content: center;
+        padding: 25px;
+        font-size: 1.3em;
+    }
+
+    #miniaturas {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+        background-color: coral;
+        padding: 10px 0;
+    }
+
+    #cadaVideo {
+        width: 180px;
+        padding: 5px;
+        background-color: beige;
+        margin: 5px;
+        display: flex;
+        flex-flow: column;
+    }
+
+    #imgCada {
+        width: 100%;
+    }
+
+    p {
+        margin: 0;
+    }
+</style>
+
+<body>
+    <div id="cabeca">
+            <img id='logo' src="youtube1.png">
+            <h1>YOUTUBE CLONE</h1>
+            <h2 id='nomeCanal'></h2>
+            <span id='logoCanal'></span>
+    </div>
+    <div id="ultimo">
+        <div id="fotoUltimo"></div>
+        <div id="descricaoUltimo">
+            <!-- 
+                <p id="nomeU">nome: </p>
+                <p id="viewsU">views: </p>
+                <p id="dataU">data: </p>
+                <p id="duracaoU">duracao:</p>
+            -->
+        </div>
+    </div>
+
+    <div id="miniaturas">
+        <!-- 
+        <div id="cadaVideo">
+                <div id="foto">FOTO</div>
+                <div id="descricao">
+                    <p id="nomeV">nome: </p>
+                    <p id="viewsV">views: </p>
+                    <p id="dataV">data: </p>
+                    <p id="duracaoV">duracao:</p>
+                </div>
+            </div>
+        -->
+    </div>
+    <script>
+        // Da lista de vídeos bruta, obtive o path base:
+        let videosYT = YTjs.contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.sectionListRenderer
+            .contents[0].itemSectionRenderer.contents[0].gridRenderer.items
+
+        // Cria-se uma lista para se armazenar somente os dados que interessam:
+        let listVideos = []
+
+        // Se mapeia o JSON bruto para formar uma nova lista de objetos:
+        videosYT.map(a => {
+            let eachVideo = {}
+            eachVideo.url = a.gridVideoRenderer.videoId
+            eachVideo.name = a.gridVideoRenderer.title.simpleText
+            eachVideo.views = a.gridVideoRenderer.viewCountText.simpleText
+            eachVideo.date = a.gridVideoRenderer.publishedTimeText.simpleText
+            eachVideo.duration = a.gridVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer
+                .text.simpleText
+            listVideos.push(eachVideo)
+        })
+
+        // Variáveis e elementos da página:
+        let foto, url, nome, views, quando, duration
+        let ultimoArea = document.querySelector('#ultimo')
+        let miniaturasArea = document.querySelector('#miniaturas')
+
+        // Logo e nome do Canal:
+        let nomeCanal = YTjs.header.c4TabbedHeaderRenderer.title
+        let logoCanal = YTjs.header.c4TabbedHeaderRenderer.avatar.thumbnails[0].url
+        document.querySelector('#nomeCanal').innerHTML = nomeCanal
+        document.querySelector('#logoCanal').innerHTML = `<img src="${logoCanal}">`
+
+        // ver: http://yt3.ggpht.com/Cpo7u1aWQDrvM_EuMtRBc2XNBk2ysBaw4v-Ia1mTsnS6MIx2A3zuV4MdXPD-HFVBGIjV6_1YFA=w1060-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj
+
+        // O primeiro item da nova lista será colocado numa div de destaque:
+        foto = 'https://i.ytimg.com/vi/' + listVideos[0].url + '/hqdefault.jpg'
+        url = 'https://www.youtube.com/watch?v=' + listVideos[0].url
+        nome = listVideos[0].name
+        views = listVideos[0].views
+        quando = listVideos[0].date
+        duration = listVideos[0].duration
+
+        // Colocamos dentro do elemento correspondente a foto do último vídeo do canal:
+        let fotoUlt =
+            `<a href="${url}" target="_blank"><img src="${foto}" id="imgU"></a>`
+        document.querySelector('#fotoUltimo').innerHTML = fotoUlt
+
+        // Dados relevantes do último vídeo feito no canal:
+        let nomeUlt = `<p><strong>Nome: </strong>${nome}</p>`
+        let viewsUlt = `<p><strong>Views: </strong>${views}</p>`
+        let quandoUlt = `<p><strong>Quando: </strong>${quando}</p>`
+        let duracaoUlt = `<p><strong>Duração: </strong>${duration}</p>`
+
+        // Se concatena todos os elementos acima e os coloca na sua div corresponte:
+        let descricaoUltimo = `${nomeUlt}${viewsUlt}${quandoUlt}${duracaoUlt}`
+        document.querySelector('#descricaoUltimo').innerHTML = descricaoUltimo
+
+        /*
+        document.querySelector('#fotoUltimo').innerHTML =
+            `<a href="${url}" target="_blank"><img src="${foto}" id="imgU"></a>`
+        document.querySelector('#nomeU').innerHTML = `<p><strong>Nome: </strong></p>${nome}`
+        document.querySelector('#viewsU').innerHTML = `<p><strong>Views: </strong></p>${views}`
+        document.querySelector('#dataU').innerHTML = `<p><strong>Quando: </strong></p>${date}`
+        document.querySelector('#duracaoU').innerHTML = `<p><strong>Duração: </strong></p>${duration}`
+        */
+
+        // Tira da lista o primeiro (último) vídeo, que já foi colocado na página:
+        listVideos.shift()
+
+        // let areaCadaVideo = document.querySelector('#miniaturas')
+
+        // Percorre para appendar na area das miniaturas:
+        listVideos.map((a, b) => {
+            foto = 'https://i.ytimg.com/vi/' + listVideos[b].url + '/hqdefault.jpg'
+            url = 'https://www.youtube.com/watch?v=' + listVideos[b].url
+            nome = listVideos[b].name
+            views = listVideos[b].views
+            quando = listVideos[b].date
+            duration = listVideos[b].duration
+
+            let fotoCada =
+                `<a href="${url}" target="_blank"><img src="${foto}" id="imgCada"></a>`
+            let nomeCada = `<p><strong>Nome: </strong>${nome}</p>`
+            let viewsCada = `<p><strong>Views: </strong>${views}</p>`
+            let quandoCada = `<p><strong>Quando: </strong>${quando}</p>`
+            let duracaoCada = `<p><strong>Duração: </strong>${duration}</p>`
+
+            //let cadaVideo = fotoCada + nomeCada + viewsCada + quandoCada + duracaoCada
+            let cadaVideo =
+                `<div id="cadaVideo">${fotoCada}${nomeCada}${viewsCada}${quandoCada}${duracaoCada}</div>`
+
+            console.log(cadaVideo)
+
+            miniaturasArea.innerHTML += cadaVideo
+
+        })
+
+        // https://codepen.io/colombe/pen/XLKZWy
+
+        // 
+
+        // YTjs
+
+        //                                                                                                                                              aqui itera  ---v
+        // quantos videos:
+        // YTjs.contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.sectionListRenderer.contents[0].itemSectionRenderer.contents[0].gridRenderer.items.length
+
+        // url do video:
+        // YTjs.contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.sectionListRenderer.contents[0].itemSectionRenderer.contents[0].gridRenderer.items[0].gridVideoRenderer.videoId
+
+        // Nome do vídeo:
+        // YTjs.contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.sectionListRenderer.contents[0].itemSectionRenderer.contents[0].gridRenderer.items[0].gridVideoRenderer.title.simpleText
+
+        // Views:
+        // YTjs.contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.sectionListRenderer.contents[0].itemSectionRenderer.contents[0].gridRenderer.items[0].gridVideoRenderer.viewCountText.simpleText
+
+        // Qto tempo atrás:
+        // YTjs.contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.sectionListRenderer.contents[0].itemSectionRenderer.contents[0].gridRenderer.items[0].gridVideoRenderer.publishedTimeText.simpleText
+
+        // Duração:
+        // YTjs.contents.twoColumnBrowseResultsRenderer.tabs[1].tabRenderer.content.sectionListRenderer.contents[0].itemSectionRenderer.contents[0].gridRenderer.items[0].gridVideoRenderer.thumbnailOverlays[0].thumbnailOverlayTimeStatusRenderer.text.simpleText
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+# Comandos no Terminal para obter todos os vídeos do Canal de um usuário do YouTube:
+
+$ CANAL="https://www.youtube.com/channel/UCLA_DiR1FfKNvjuUpBHmylQ"
+$ hxnormalize -x "${CANAL}/videos" | grep '"ytInitialData"' | sed 's/window\["ytInitialData"\]/const YTjs/' > yt.js
+
+
+
+
+hxnormalize -x "https://www.youtube.com/c/HélioGiroto/videos" | grep '"ytInitialData"' | sed 's/window\["ytInitialData"\]/const YTjs/' > yt.js
+hxnormalize -x "https://www.youtube.com/c/HélioGiroto/videos" | sed 's/{/\n{/g; s/}/}\n/g' | grep 'videoId"' | grep '}' | cat -n
+
+
+     1	{"videoId":"4Kb7QBeCjJE"}
+     2	{"videoId":"soUHmJyccSw"}
+     3	{"videoId":"2ohJJnFCyhc"}
+     4	{"videoId":"L0O0Jsy1YbQ"}
+     5	{"videoId":"FccVv-nae2w"}
+     6	{"videoId":"Zx2ktw_H2Ws"}
+     7	{"videoId":"VO42EBsobmM"}
+     8	{"videoId":"0em_aHV5H1o"}
+     9	{"videoId":"5JmwX6CgNDk"}
+    10	{"videoId":"ORJfQ01YuFA"}
+    11	{"videoId":"ygmHhJNNpB0"}
+    12	{"videoId":"UpAbYOQ44Fg"}
+    13	{"videoId":"kNLU-V96AeA"}
+    14	{"videoId":"Q7fVRQMJLj4"}
+    15	{"videoId":"x2rsQEEzR8s"}
+    16	{"videoId":"vZOr2SDmNPU"}
+    17	{"videoId":"Z5Wx7NiLITg"}
+    18	{"videoId":"O-PUx4W5t0c"}
+    19	{"videoId":"LT66sQaEEfE"}
+    20	{"videoId":"zNl_CYihN-I"}
+    21	{"videoId":"5s217N6pXHI"}
+    22	{"videoId":"KODu2v76jqQ"}
+    23	{"videoId":"ISNqsfZ6ETY"}
+    24	{"videoId":"oH8uLbSMpR4"}
+    25	{"videoId":"Qdqn3P_OG74"}
+    26	{"videoId":"bCOnug5KHx4"}
+    27	{"videoId":"sEKGFV9iZHA"}
+    28	{"videoId":"uMJjtQRY6_k"}
+
+
+# Video (modelo de URL):
+https://www.youtube.com/watch?v= 4Kb7QBeCjJE
+
+# Thumbnail (modelo de URL):
+https://i.ytimg.com/vi/4Kb7QBeCjJE/hqdefault.jpg
+https://i.ytimg.com/vi/KODu2v76jqQ/hqdefault.jpg
+
+
+# Melhor: 
+CANAL="https://www.youtube.com/channel/UCLA_DiR1FfKNvjuUpBHmylQ"
+hxnormalize -x ${CANAL} | sed 's/{/\n{/g; s/}/}\n/g' | grep 'videoId"' | grep '}' | sed 's/.$/&,/; 1s/^/[/; $s/.$/]/; 1s/^/const lastVideos =\n/'
+
+
+
+hxnormalize -x "https://www.youtube.com/c/HélioGiroto/videos" | sed 's/{/\n{/g; s/}/}\n/g' | grep 'videoId"' | grep '}' | sed 's/.$/&,/; 1s/^/[/; $s/.$/]/; 1s/^/const lastVideos =\n/'
+
+
+# ou:
+
+hxnormalize -x "https://www.youtube.com/c/HélioGiroto/videos" | sed 's/{/\n{/g; s/}/}\n/g' | grep 'videoId"' | grep '}' | sed 's/.$/&,/; 1s/^/[/; $s/.$/]/; 1s/^/const lastVideos =\n/' > lastVideos.js
+
+
+// No console:
+location.href = 'https://www.youtube.com/watch?v=' + lastVideos[27].videoId
+location.href = 'https://i.ytimg.com/vi/' + lastVideos[27].videoId + '/hqdefault.jpg'
+
+
+
+
+# hxnormalize -x "https://www.youtube.com/c/HélioGiroto/videos" | grep '"ytInitialData"' | sed 's/window\["ytInitialData"\]/const YTjs/' > yt.js
+
+
